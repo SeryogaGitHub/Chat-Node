@@ -1,0 +1,62 @@
+{{#if todos.length}}
+  <ul>
+  {{#each todos}}
+    <li class="wrap-form">
+      <form action="/complete" method="post">
+        <label>
+          {{#if completed}}
+            <input type="checkbox" checked name="completed">
+            <span class="completed">{{title}}</span>
+          {{else}}
+            <input type="checkbox" name="completed">
+            <span>{{title}}</span>
+          {{/if}}
+
+          <input type="hidden" value="{{_id}}" name="id">
+          <button class="btn btn-small" type="submit">Зберегти</button>
+        </label>
+      </form>
+    </li>
+  {{/each}}
+  </ul>
+{{else}}
+<p>No todos!</p>
+{{/if}}
+
+<h1>Чат</h1>
+
+<form id="messForm">
+  <label for="name-new">Імя нового користувача</label>
+  <input type="text" id="name-new">
+
+  <label for="name">Імя користувача</label>
+  <input type="text" id="name">
+
+  <label for="message">Текст</label>
+  <textarea name="message" id="message" cols="30" rows="10"></textarea>
+  <input type="submit" class="btn" value="Відправити">
+</form>
+
+<div id="all-mess"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  $(function (){
+    var socket = io.connect();
+    var $form = $("#messForm")
+    var $message = $('#message')
+    var $allMess = $("#all-mess");
+    var $nameNew = $("#name-new");
+    var $name = $("#name");
+
+    $form.submit(function (e){
+      e.preventDefault();
+      socket.emit('send mess', {nameNew: $nameNew.val(), name: $name.val()});
+      $message.val('');
+    });
+
+    socket.on('add mess', function (data){
+      $allMess.append(`<div>${data.name}</div>`)
+    })
+  })
+</script>
