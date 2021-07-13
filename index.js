@@ -4,10 +4,10 @@ const http = require('http');
 const mongoose = require('mongoose')
 const path = require('path')
 const exphbs = require('express-handlebars')
-const todoRouters = require('./routes/routes')
-const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
+const chatRouters = require('./routes/routes')
+// const server = http.createServer(app);
+// const { Server } = require("socket.io");
+// const io = new Server(server);
 
 const PORT = process.env.PORT || 3000
 
@@ -20,14 +20,10 @@ app.engine('hbs', hbs.engine) // двіжок для рендиренга сто
 app.set('view engine', 'hbs')
 app.set('views', 'views') // реєстрація папки де сберігаються види(сторінки)
 
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({extended: true}))  //для рооти body
 app.use(express.static(path.join(__dirname, 'styles')))
 
-app.use(todoRouters)
-
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
+app.use(chatRouters)
 
 async function start(){
   try {
@@ -45,31 +41,31 @@ async function start(){
   }
 }
 
-io.on('connection', (socket) => {
-  console.log('Підключений');
-  connections.push(socket);
-
-  socket.on('disconnect', () => {
-    connections.slice(connections.indexOf((socket)), 1)
-    console.log('Відключений');
-  });
-
-  socket.on('send mess', function (data){
-
-    const nameId = `SELECT * FROM users WHERE name=?`;
-    const filter = [data.nameNew];
-
-    //шукаємо корустувача
-    connection.query(nameId, filter, function(err, results) {
-      if(err) console.log(err);
-
-      if(results.length){
-        newUser(data)
-      } else {
-        console.log("Користувач відсутній");
-      }
-    });
-  })
-});
+// io.on('connection', (socket) => {
+//   console.log('Підключений');
+//   connections.push(socket);
+//
+//   socket.on('disconnect', () => {
+//     connections.slice(connections.indexOf((socket)), 1)
+//     console.log('Відключений');
+//   });
+//
+//   socket.on('send mess', function (data){
+//
+//     const nameId = `SELECT * FROM users WHERE name=?`;
+//     const filter = [data.nameNew];
+//
+//     //шукаємо корустувача
+//     connection.query(nameId, filter, function(err, results) {
+//       if(err) console.log(err);
+//
+//       if(results.length){
+//         newUser(data)
+//       } else {
+//         console.log("Користувач відсутній");
+//       }
+//     });
+//   })
+// });
 
 start();

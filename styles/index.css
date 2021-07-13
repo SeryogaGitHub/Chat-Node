@@ -38,6 +38,21 @@ textarea:focus{
   color: #ffffff;
   margin-top: 30px;
 }
+.container{
+  max-width: 680px;
+}
+.nav-wrapper{
+  font-size: 22px;
+}
+.nav-wrapper a{
+  font-size: 20px;
+}
+.btn{
+  line-height: 46px;
+}
+.nav-wrapper .active{
+  background: #26a69a;
+}
 .wrap-form {
   margin-bottom: 1rem;
 }

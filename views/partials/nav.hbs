@@ -1,19 +1,25 @@
 <nav class="blue darken-4">
   <div class="container">
     <div class="nav-wrapper">
-      <a href="#" class="brand-logo">Logo</a>
+      <a href="/" class="brand-logo">Logo</a>
 
         <ul id="nav-mobile" class="right hide-on-med-and-down">
         {{#if isIndex}}
-          <li><a href="/" class="active">Todos</a></li>
+          <li><a href="/" class="active">Головна</a></li>
         {{else}}
-          <li><a href="/">Todos</a></li>
+          <li><a href="/">Головна</a></li>
         {{/if}}
 
-        {{#if isCreate}}
-          <li><a href="/create" class="active">Create</a></li>
+        {{#if isLogin}}
+          <li><a href="/login" class="active">Авторизація</a></li>
         {{else}}
-          <li><a href="/create">Create</a></li>
+          <li><a href="/login">Авторизація</a></li>
+        {{/if}}
+
+        {{#if isSignUp}}
+          <li><a href="/signup" class="active">Реєстрація</a></li>
+        {{else}}
+          <li><a href="/signup">Реєстрація</a></li>
         {{/if}}
         </ul>
     </div>
