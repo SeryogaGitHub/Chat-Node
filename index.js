@@ -30,7 +30,8 @@ const start = async () => {
     await mongoose.connect('mongodb+srv://Seryoga:serg123456789@cluster0.a1low.mongodb.net/Chat', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useFindAndModify: false
+      useFindAndModify: false,
+      useCreateIndex: true
     });
 
     app.listen(PORT, () => {
