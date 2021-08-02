@@ -1,7 +1,17 @@
 const User = require('../models/User')
 const Role = require('../models/Role')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 const {validationResult} = require('express-validator')
+const {secret} = require("../config");
+
+const generateAccessToken = (id, roles) => {
+  const playload = {
+    id,
+    roles
+  }
+  return jwt.sign(playload, secret, {expiresIn: "24h"}) //генерація токіна
+}
 
 class authController {
   async registration(req, res){
@@ -28,12 +38,25 @@ class authController {
     } catch (e){
       console.log(req.body)
       console.log(e)
-      res.status(400).json({message: 'Регістрація невдала'})
+      res.status(400).json({message: 'Реєстрація невдала'})
     }
   }
 
   async login(req, res){
     try {
+      const {username, password} = req.body
+      const user = await User.findOne({username})
+      if (!user) {
+        return res.status(400).json({message: `Користувач ${username} не знайдений!`})
+      }
+
+      const validPassword = bcrypt.compareSync(password, user.password)
+      if (!validPassword) {
+        return res.status(400).json({message: `Ви ввели неправильний пароль`})
+      }
+
+      const token = generateAccessToken(user._id, user.roles)
+      return res.json({token})
 
     } catch (e){
 
