@@ -1,11 +1,14 @@
 const express = require('express');
 const app = express()
+const cookieParser = require("cookie-parser");
 const mongoose = require('mongoose') // потрібно для роботи з базою данних mongodb
 const path = require('path')
 const exphbs = require('express-handlebars')
+const {dbUrl} = require("./config");
 const PORT = process.env.PORT || 3000
 
 // const chatRouters = require('./routes/routes')
+app.use(cookieParser());
 const authRouter = require('./routes/authRoter')
 
 const hbs = exphbs.create({
@@ -24,10 +27,9 @@ app.use(express.static(path.join(__dirname, 'styles'))) // підключенн�
 // app.use(chatRouters)
 
 app.use("/", authRouter)
-
 const start = async () => {
   try {
-    await mongoose.connect('mongodb+srv://Seryoga:serg123456789@cluster0.a1low.mongodb.net/Chat', {
+    await mongoose.connect(dbUrl, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,

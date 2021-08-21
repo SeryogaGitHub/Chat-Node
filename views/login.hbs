@@ -2,8 +2,11 @@
 
 <form action="/login" method="POST">
   <div class="input-file">
-    <input type="text" name="name" placeholder="Логін">
+    <input type="text" name="username" placeholder="Логін">
+    <input type="password" name="password" placeholder="Пароль">
   </div>
 
   <button type="submit" class="btn">Авторизуватися</button>
+
+  <div class="error">{{message}}</div>
 </form>

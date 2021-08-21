@@ -10,16 +10,24 @@
           <li><a href="/">Головна</a></li>
         {{/if}}
 
-        {{#if isLogin}}
-          <li><a href="/login" class="active">Авторизація</a></li>
-        {{else}}
-          <li><a href="/login">Авторизація</a></li>
-        {{/if}}
+        {{#if username.length}}
 
-        {{#if isSignUp}}
-          <li><a href="/signup" class="active">Реєстрація</a></li>
+            <li><a href="/logout">Вийти</a></li>
+
         {{else}}
-          <li><a href="/signup">Реєстрація</a></li>
+
+            {{#if isLogin}}
+              <li><a href="/login" class="active">Авторизація</a></li>
+            {{else}}
+              <li><a href="/login">Авторизація</a></li>
+            {{/if}}
+
+            {{#if isSignUp}}
+              <li><a href="/signup" class="active">Реєстрація</a></li>
+            {{else}}
+              <li><a href="/signup">Реєстрація</a></li>
+            {{/if}}
+
         {{/if}}
         </ul>
     </div>

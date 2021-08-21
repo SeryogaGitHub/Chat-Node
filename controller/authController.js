@@ -10,7 +10,7 @@ const generateAccessToken = (id, roles) => {
     id,
     roles
   }
-  return jwt.sign(playload, secret, {expiresIn: "24h"}) //генерація токіна
+  return jwt.sign(playload, secret, {expiresIn: "1h"}) //генерація токіна
 }
 
 class authController {
@@ -36,8 +36,8 @@ class authController {
       return res.json({message: 'Користувач зареєстрований!'})
 
     } catch (e){
-      console.log(req.body)
-      console.log(e)
+      console.log('catch = ' + req.body)
+      console.log('catch (e) = ' + e)
       res.status(400).json({message: 'Реєстрація невдала'})
     }
   }
@@ -47,7 +47,7 @@ class authController {
       const {username, password} = req.body
       const user = await User.findOne({username})
       if (!user) {
-        return res.status(400).json({message: `Користувач ${username} не знайдений!`})
+        res.render('login', {message: `Користувач "${username}" не знайдений!`});
       }
 
       const validPassword = bcrypt.compareSync(password, user.password)
@@ -56,10 +56,18 @@ class authController {
       }
 
       const token = generateAccessToken(user._id, user.roles)
-      return res.json({token})
+
+      return res.cookie({
+        "user" : user.username,
+        "token": token
+      }, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+          })
+          .redirect(200, '/')
 
     } catch (e){
-
+      console.log(e);
     }
   }
 
