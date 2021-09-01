@@ -4,10 +4,16 @@ const authController = require('../controller/authController')
 const {check} = require('express-validator')
 const authMiddleware = require('../middleware/authMiddleware')
 
-router.post('/reqistration', [
+router.post('/signup', [
     check('username', 'Імя користувача неможе бути пустим').notEmpty(),
     check('password', 'Пароль повинен бути більше 4 і не більше 10').isLength({min: 4, max: 10})
-],authController.registration)
+], authController.registration)
+
+router.get('/signup', (req, res) => {
+    res.render('signup',{
+        isSignUp: true
+    })
+})
 
 router.post('/login', authController.login)
 
@@ -17,13 +23,11 @@ router.get('/login', (req, res) => {
     })
 })
 
-router.get('/logout', (req, res) => {
-    return res.clearCookie("access_token").clearCookie("user").status(200).redirect('/login');
-})
-
 router.get('/', (req, res) => {
 
     const user = req.cookies.user
+    console.log("index user = " + user);
+    console.dir("req.params = " + req.params);
 
     if (user) {
         res.render('index',{
@@ -51,6 +55,8 @@ router.post('/', (req, res) => {
     }
 
 })
+
+router.get('/logout', authController.logout)
 
 router.get('/users', authMiddleware, authController.getUsers)
 

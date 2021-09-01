@@ -33,11 +33,12 @@ class authController {
       const userRole = await Role.findOne({value: "USER"})
       const user = new User({username, password: hashPassword, role: [userRole.value]})
       await user.save()
-      return res.json({message: 'Користувач зареєстрований!'})
+
+      return res.status(200).redirect('/login')
 
     } catch (e){
       console.log('catch = ' + req.body)
-      console.log('catch (e) = ' + e)
+      console.log(e)
       res.status(400).json({message: 'Реєстрація невдала'})
     }
   }
@@ -57,17 +58,25 @@ class authController {
 
       const token = generateAccessToken(user._id, user.roles)
 
-      return res.cookie({
-        "user" : user.username,
-        "token": token
-      }, {
+      return res.cookie("access_token", token, {
+            user: user.username,
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-          })
-          .redirect(200, '/')
+          }).cookie("user", user.username, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+          }).status(200).redirect('/')
 
     } catch (e){
       console.log(e);
+    }
+  }
+
+  async logout(req, res){
+    try {
+      return res.clearCookie("access_token").clearCookie("user").status(200).redirect('/login');
+    } catch (e){
+      console.log(e)
     }
   }
 
