@@ -26,8 +26,6 @@ router.get('/login', (req, res) => {
 router.get('/', (req, res) => {
 
     const user = req.cookies.user
-    console.log("index user = " + user);
-    console.dir("req.params = " + req.params);
 
     if (user) {
         res.render('index',{
@@ -44,7 +42,6 @@ router.post('/', (req, res) => {
     const username = req.body
 
     if (username) {
-        console.log(username);
         res.render('index', {
             username: username,
             title: "Index page",
